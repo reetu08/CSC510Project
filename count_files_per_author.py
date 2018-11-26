@@ -8,15 +8,17 @@ def writeInFile(fileD, strData):
   fileToWrite.close()
 
 #read_file is the file from which we are reading the author names and file names
-read_file   ='C:/pydriller/resources/Puppet_all_files_author_commit.csv'
-#read_file   ='C:/pydriller/resources/GitLab_all_files_author_commit.csv'
+#read_file   ='C:/pydriller/resources/Puppet_all_files_author_commit.csv'
+read_file   ='C:/pydriller/resources/GitLab_all_files_author_commit.csv'
 read_df     = pd.read_csv(read_file,usecols=[0,1])
 #write_file is where we will store the extracted data
-write_file  ='C:/pydriller/resources/Puppet_all_files_count_per_author.csv'
-#write_file  ='C:/pydriller/resources/GitLab_all_files_count_per_author.csv'
+#write_file  ='C:/pydriller/resources/Puppet_all_files_count_per_author.csv'
+write_file  ='C:/pydriller/resources/GitLab_all_files_count_per_author.csv'
 #second_df    = pd.read_csv(write_file)
-write2 = 'C:/pydriller/resources/Puppet_minor_contribution.csv'
-#write2 = 'C:/pydriller/resources/GitLab_minor_contribution.csv'
+#write2 = 'C:/pydriller/resources/Puppet_minor_contribution.csv'
+write2 = 'C:/pydriller/resources/GitLab_minor_contribution.csv'
+#write3 = 'C:/pydriller/resources/Puppet_major_contribution.csv'
+write3 = 'C:/pydriller/resources/GitLab_major_contribution.csv'
 
 #finding the unique filenames from the list
 file_list= np.array(read_df['file_name'])
@@ -39,24 +41,32 @@ for index, row in read_df.iterrows():
 #calculating total number of commits per file
 matrix.loc['Total']= matrix.sum()
 matrix.to_csv(write_file)
-my='less','total'
-minor = pd.DataFrame(index=my,columns=header)
+min_index='minor','total'
+minor = pd.DataFrame(index=min_index,columns=header)
+max_index='major','total'
+major = pd.DataFrame(index=max_index,columns=header)
+
                 
 #calculating the minor contribution ratio per author per file        
 for column in matrix.columns:
-    count =0
+    min_count =0
+    max_count =0
     author=0
     for index,row in matrix.iterrows():
         if index!='Total':
             row = row/matrix.loc['Total']
             if row[column]*100>0 and row[column]*100<5:
-                count+=1
+                min_count+=1
                 author+=1
                 print ('*********Minor contribution {ratio}% by {author} On the file {filename}'.format(ratio=row[column]*100,author=index,filename=column))
             elif row[column]*100>5:
+                max_count+=1
                 author+=1
-                #print ('/////////Major contribution {ratio}% by {author}'.format(ratio=row[column]*100,author=index))
-    minor.loc['less'][column]=count
+                print ('/////////Major contribution {ratio}% by {author}  On the file {filename}'.format(ratio=row[column]*100,author=index,filename=column))
+    minor.loc['minor'][column]=min_count
     minor.loc['total'][column]=author
+    major.loc['major'][column]=max_count
+    major.loc['total'][column]=author
 
 minor.to_csv(write2)
+major.to_csv(write3)
