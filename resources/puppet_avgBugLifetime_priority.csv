@@ -1,0 +1,8 @@
+Priority,Bug Count,Total Bug Age (days),Average Bug Age (days)
+Trivial,21,12234,583
+Minor,116,42536,367
+Normal,3046,1080561,355
+Major,364,89792,247
+Critical,117,16365,140
+Blocker,90,4424,49
+,3754,1245912,290
